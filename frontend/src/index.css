@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-ink text-slate-100 antialiased;
+}
+
+.guide-box {
+  box-shadow: 0 0 0 9999px rgba(11, 18, 32, 0.35);
+}
+
+@keyframes home-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes home-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(18px, -14px);
+  }
+}
+
+.home-rise {
+  animation: home-rise 0.7s ease-out both;
+}
+
+.home-rise-delay {
+  animation: home-rise 0.9s ease-out 0.15s both;
+}
+
+.home-drift {
+  animation: home-drift 10s ease-in-out infinite;
+}
+
+.home-drift-slow {
+  animation: home-drift 14s ease-in-out infinite reverse;
+}
+
+@keyframes home-particle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translateY(-22px) scale(1.15);
+  }
+}
+
+.home-particle {
+  animation-name: home-particle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+

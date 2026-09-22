@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.egg-info/
+.pytest_cache/
+
+# Model weights (regenerate with train.py)
+backend/model/sign_model.keras
+backend/model/sign_model_letters.keras
+backend/model/sign_model_words.keras
+backend/model/training_history.json
+
+# Dataset images (collected locally)
+dataset/hello_subset/**
+!dataset/hello_subset/.gitkeep
+dataset/asl_alphabet/**
+dataset/signs/**
+!dataset/signs/.gitkeep
+dataset/letters/**
+!dataset/letters/.gitkeep
+
+# Regenerated with train.py
+backend/model/labels.json
+backend/model/labels_letters.json
+backend/model/labels_words.json
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
