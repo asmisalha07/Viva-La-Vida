@@ -1,6 +1,6 @@
 export default function SignGuideGrid({ items = [], compact = false }) {
   if (!items.length) {
-    return <p className="text-sm text-slate-500">No collected photos yet.</p>;
+    return <p className="text-sm text-slate-500">No guide photos in guide-photos/ yet.</p>;
   }
   return (
     <div className={`grid gap-3 ${compact ? "grid-cols-4 sm:grid-cols-6" : "grid-cols-3 sm:grid-cols-4 md:grid-cols-6"}`}>
