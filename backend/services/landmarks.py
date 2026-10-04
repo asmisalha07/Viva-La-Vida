@@ -15,6 +15,7 @@ _TIPS = (4, 8, 12, 16, 20)
 
 _lock = threading.Lock()
 _hands_video = None
+_hands_static = None
 
 
 def _video_hands():
@@ -27,20 +28,32 @@ def _video_hands():
             max_num_hands=1,
             min_detection_confidence=0.5,
             min_tracking_confidence=0.5,
-            model_complexity=1,
+            model_complexity=0,
         )
     return _hands_video
+
+
+def _still_hands():
+    import mediapipe as mp
+
+    global _hands_static
+    if _hands_static is None:
+        _hands_static = mp.solutions.hands.Hands(
+            static_image_mode=True,
+            max_num_hands=1,
+            min_detection_confidence=0.4,
+            model_complexity=0,
+        )
+    return _hands_static
 
 
 def extract_landmarks(frame_bgr: np.ndarray, static: bool = True) -> np.ndarray | None:
     """
     BGR OpenCV frame → normalized 63-vector, or None if no hand.
 
-    Still frames (browser /predict) get a fresh Hands graph each call.
-    Reusing one graph across HTTP photos hits MediaPipe timestamp errors.
+    Browser /predict reuses one static Hands graph (Render RAM limit).
     """
     import cv2
-    import mediapipe as mp
 
     if frame_bgr is None or frame_bgr.size == 0:
         return None
@@ -48,18 +61,17 @@ def extract_landmarks(frame_bgr: np.ndarray, static: bool = True) -> np.ndarray 
 
     with _lock:
         if static:
-            hands = mp.solutions.hands.Hands(
-                static_image_mode=True,
-                max_num_hands=1,
-                min_detection_confidence=0.4,
-                model_complexity=0,
-            )
             try:
-                result = hands.process(rgb)
+                result = _still_hands().process(rgb)
             except ValueError:
-                return None
-            finally:
-                hands.close()
+                global _hands_static
+                if _hands_static is not None:
+                    _hands_static.close()
+                    _hands_static = None
+                try:
+                    result = _still_hands().process(rgb)
+                except ValueError:
+                    return None
         else:
             try:
                 result = _video_hands().process(rgb)
